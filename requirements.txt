@@ -1,0 +1,2 @@
+advent-of-code-data==1.2.3
+black==22.10.0
