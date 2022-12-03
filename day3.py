@@ -6,7 +6,7 @@ both = []
 for sack in data.split("\n"):
     l = len(sack) // 2
     one, two = sack[:l], sack[l:]
-    both += list(set(one).intersection(set(two)))
+    both.append(set(one).intersection(set(two)).pop())
 
 weights = {l: i + 1 for i, l in enumerate(ascii_letters)}
 a = sum([weights[l] for l in both])
