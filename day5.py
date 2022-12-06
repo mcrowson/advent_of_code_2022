@@ -28,7 +28,7 @@ for inst in instructions.split("\n"):
 
 
 def get_top(inp):
-    return "".join([inp[str(i)][-1] for i in range(1, len(inp) + 1) if inp[str(i)]])
+    return "".join([inp[str(i)][-1] for i in range(1, len(inp) + 1)])
 
 
 print(get_top(a_heaps))
