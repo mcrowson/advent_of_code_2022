@@ -1,5 +1,5 @@
 from aocd import data
-from collections import defaultdict
+from collections import defaultdict, deque
 
 
 def set_it(msg, msg_len):
@@ -58,8 +58,9 @@ def two_pointers(msg, msg_len):
     beg, end = 0, 1
     buffer = msg[0]
     while end - beg < msg_len:
-        if msg[end] not in buffer:
-            buffer += msg[end]
+        nxt = msg[end]
+        if nxt not in buffer:
+            buffer += nxt
             end += 1
 
         else:
@@ -90,6 +91,23 @@ print("Gav Idea: ")
 print(gav_idea(data, 4))
 print(gav_idea(data, 14))
 
+# Gav found this one on reddit, timing it
+def find_marker(msg, n):
+    marker = deque()
+    msg_start = 0
+    while len(marker) < n:
+        current = msg[msg_start]
+        msg_start += 1
+        while current in marker:
+            marker.popleft()
+        marker.append(current)
+    return msg_start
+
+
+print("Find Marker: ")
+print(find_marker(data, 4))
+print(find_marker(data, 14))
+
 if __name__ == "__main__":
     import timeit
 
@@ -118,18 +136,25 @@ if __name__ == "__main__":
         number=1000,
         setup="from __main__ import gav_idea; from aocd import data",
     )
+    w_find_marker = timeit.timeit(
+        "find_marker(data, 4)",
+        number=1000,
+        setup="from __main__ import find_marker; from aocd import data",
+    )
 
     print("Time with Sets: ", w_sets)
     print("Time with Pointer: ", w_pointer)
     print("Time with Decreasing Buffer: ", w_decreasing_buffer)
     print("Time with Two Pointers: ", w_two_pointers)
     print("Time with Gav Idea: ", w_gav_idea)
+    print("Time with Find Marker: ", w_find_marker)
 
 
 """
-Time with Sets:  0.4002370410016738
-Time with Pointer:  0.5628284580307081
-Time with Decreasing Buffer:  0.395182125037536
-Time with Two Pointers:  0.3762060839799233
-Time with Gav Idea:  0.6576987499720417
+Time with Sets:  0.4068907499895431
+Time with Pointer:  0.5638869579997845
+Time with Decreasing Buffer:  0.39821137505350634
+Time with Two Pointers:  0.3642351250164211
+Time with Gav Idea:  0.6578782919677906
+Time with Find Marker:  0.27565645799040794
 """
