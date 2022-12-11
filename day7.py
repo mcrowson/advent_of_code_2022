@@ -9,32 +9,28 @@ dir_sizes = defaultdict(int)
 
 current_path = []
 for cmd in cmd_hist:
-    if cmd[:4] == "$ cd":
-        if cmd[5:] == "..":
+    pref, suf = cmd[:4], cmd[5:]
+    if pref in ("$ ls", "dir "):
+        continue
+    elif pref == "$ cd":
+        if suf == "..":
             current_path.pop(-1)
         else:
-            current_path.append(cmd[5:])
-    elif "$ " != cmd[:2] and "dir " != cmd[:4]:
-        fs, _ = cmd.split(" ")
+            current_path.append(suf)
+    else:
         path = ""
         for dir in current_path:
-            path += f"/{dir}"
-            dir_sizes[path] += int(fs)
+            path += f"/{dir}" if dir != "/" else "/"
+            dir_sizes[path] += int(cmd.split(" ")[0])
 
 
 a = sum([s for s in dir_sizes.values() if s <= 100000])
 print(a)
 
-desired_space = 70000000 - 30000000
-current_space = dir_sizes["//"]
-need_to_free = current_space - desired_space
+need_to_free = dir_sizes["/"] - (70000000 - 30000000)
 
 possible_deletions = []
-
-for k, v in dir_sizes.items():
-    if v < need_to_free:
-        continue
-    heapq.heappush(possible_deletions, (v, k))
+[heapq.heappush(possible_deletions, (v, k)) for k, v in dir_sizes.items() if v >= need_to_free]
 
 b = heapq.heappop(possible_deletions)
 print(b[0])
