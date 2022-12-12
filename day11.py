@@ -22,9 +22,6 @@ class Monkey:
         self.test_false = int(test_false.split(" ")[-1])
         self.inspected = 0
 
-    def catch(self, worry_level_item: int) -> None:
-        self.worry_items.append(worry_level_item)
-
     def inspect(self) -> None:
         while self.worry_items:
             item = self.worry_items.pop(0)
